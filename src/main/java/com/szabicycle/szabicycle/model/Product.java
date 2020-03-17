@@ -1,4 +1,4 @@
-package com.szabicycle.szabicycle.entity;
+package com.szabicycle.szabicycle.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,27 +8,21 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 
 @Entity
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Product {
 
     @Id
     @GeneratedValue
-    private Long Id;
+    private Long id;
 
     private String name;
-
     private String brand;
-
-    private String about;
-
-    private  double price;
-
-    @Lob
-    private byte[] productPic;
+    private String details;
+    private int price;
+    private String imgUri;
 }
