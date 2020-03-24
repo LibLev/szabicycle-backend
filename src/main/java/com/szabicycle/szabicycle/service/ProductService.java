@@ -5,6 +5,7 @@ import com.szabicycle.szabicycle.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Map;
 
 @Service
@@ -19,7 +20,7 @@ public class ProductService {
                 .brand(data.get("brand"))
                 .details(data.get("details"))
                 .price(Integer.parseInt(data.get("price")))
-                .imgUri(data.get("imgUri"))
+                .imgUris(Arrays.asList(data.get("imgUri1"), data.get("imgUri2"), data.get("imgUri3"), data.get("imgUri4"), data.get("imgUri5")))
                 .build();
         productRepository.save(newProduct);
     }

@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -36,8 +37,12 @@ public class FileController {
 
     @GetMapping("/get-all-product")
     public List<Product> getAllProduct(){
-        System.out.println(productRepository.findAll().toString());
         return productRepository.findAll();
+    }
+
+    @GetMapping("/product/{productId}")
+    public Optional<Product> getProductById(@PathVariable("productId") Long id){
+        return productRepository.findById(id);
     }
 
     @PostMapping("/uploadFile")
@@ -59,7 +64,7 @@ public class FileController {
     }
 
     @PostMapping("/uploadMultipleFiles")
-    public List<UploadFileResponse> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
+    public List<UploadFileResponse> uploadMultipleFiles(@RequestParam("images") MultipartFile[] files) {
         return Arrays.asList(files)
                 .stream()
                 .map(file -> uploadFile(file))
