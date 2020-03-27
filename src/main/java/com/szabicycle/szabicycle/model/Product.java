@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +21,13 @@ public class Product {
     @GeneratedValue
     private Long id;
 
+    @NotNull
     private String name;
+    @NotNull
     private String brand;
+    @NotNull
     private String details;
+    @NotNull
     private int price;
 
     @ElementCollection(fetch = FetchType.EAGER)

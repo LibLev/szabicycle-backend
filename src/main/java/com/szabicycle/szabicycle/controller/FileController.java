@@ -59,8 +59,8 @@ public class FileController {
     }
 
     @PostMapping("/saveProduct")
-    public void saveProduct(@RequestBody Map<String, String> data){
-        productService.saveProduct(data);
+    public void saveProduct(@RequestBody Map<String, String>  product){
+        productService.saveProduct(product);
     }
 
     @PostMapping("/uploadMultipleFiles")
