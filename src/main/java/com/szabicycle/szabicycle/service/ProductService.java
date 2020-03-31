@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -15,12 +16,13 @@ public class ProductService {
     private ProductRepository productRepository;
 
     public void saveProduct(Map<String,String> data){
+        List<String> items = Arrays.asList(data.get("imgUris").split(","));
         Product newProduct = Product.builder()
                 .name(data.get("name"))
                 .brand(data.get("brand"))
                 .details(data.get("details"))
                 .price(Integer.parseInt(data.get("price")))
-                .imgUris(Arrays.asList(data.get("imgUri1"),data.get("imgUri2"),data.get("imgUri3"),data.get("imgUri4"),data.get("imgUri5")))
+                .imgUris(items)
                 .build();
         productRepository.save(newProduct);
     }
