@@ -40,6 +40,16 @@ public class FileController {
         return productRepository.findAll();
     }
 
+    @GetMapping("/get-all-bicycle")
+    public List<Product> getAllBicycle(){
+        return productRepository.findAllBicycle();
+    }
+
+    @GetMapping("/get-all-component")
+    public List<Product> getAllComponent(){
+        return productRepository.findAllComponent();
+    }
+
     @GetMapping("/product/{productId}")
     public Optional<Product> getProductById(@PathVariable("productId") Long id){
         return productRepository.findById(id);
