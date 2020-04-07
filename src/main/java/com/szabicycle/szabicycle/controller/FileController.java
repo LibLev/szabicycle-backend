@@ -104,4 +104,14 @@ public class FileController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
     }
+
+    @DeleteMapping("/deleteProduct/{id}")
+    public void deleteProduct(@PathVariable Long id){
+        productRepository.deleteById(id);
+    }
+
+    @PostMapping("/updateProduct")
+    public Product updateProduct(@RequestBody Map<String, String> data){
+        return productService.updateProduct(data);
+    }
 }

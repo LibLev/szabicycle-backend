@@ -13,4 +13,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("select p from Product p where p.productType = com.szabicycle.szabicycle.model.ProductType.COMPONENT")
     List<Product> findAllComponent();
+
+
 }
