@@ -50,6 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/get-all-component").permitAll() // allowed by anyone
                 .antMatchers(HttpMethod.GET,"/product/{productId}").permitAll() // allowed by anyone
                 .antMatchers(HttpMethod.GET,"/downloadFile/**").permitAll() // allowed by anyone
+                .antMatchers(HttpMethod.POST,"/send-mail").permitAll() // allowed by anyone
                 .antMatchers(HttpMethod.POST, "/saveProduct").hasRole("ADMIN") // allowed if signed in with ADMIN role
                 .antMatchers(HttpMethod.POST, "/uploadFile").hasRole("ADMIN") // allowed if signed in with ADMIN role
                 .antMatchers(HttpMethod.POST, "/uploadMultipleFiles").hasRole("ADMIN") // allowed if signed in with ADMIN role
