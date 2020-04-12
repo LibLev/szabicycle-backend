@@ -18,10 +18,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -106,8 +106,15 @@ public class FileController {
     }
 
     @DeleteMapping("/deleteProduct/{id}")
-    public void deleteProduct(@PathVariable Long id){
+    public void deleteProduct(@PathVariable Long id) throws IOException {
+        Optional<Product> opProd = productRepository.findById(id);
+        Product product = opProd.get();
+        List<String> deletePictures = product.getImgUris();
         productRepository.deleteById(id);
+        for (String s : deletePictures) {
+            Path pictureToDelete = Paths.get("/home/levente/Desktop/pet/szabiCycle/szaby-cycle-backend/photos/" + s);
+            Files.delete(pictureToDelete);
+        }
     }
 
     @PostMapping("/updateProduct")
