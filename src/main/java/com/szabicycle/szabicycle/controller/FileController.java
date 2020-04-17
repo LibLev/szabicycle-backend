@@ -1,10 +1,7 @@
 package com.szabicycle.szabicycle.controller;
 
-import com.szabicycle.szabicycle.model.Product;
 import com.szabicycle.szabicycle.payload.UploadFileResponse;
-import com.szabicycle.szabicycle.repository.ProductRepository;
 import com.szabicycle.szabicycle.service.FileStorageService;
-import com.szabicycle.szabicycle.service.ProductService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +15,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -31,29 +26,7 @@ public class FileController {
 
     private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 
-    private ProductService productService;
     private FileStorageService fileStorageService;
-    private ProductRepository productRepository;
-
-    @GetMapping("/get-all-product")
-    public List<Product> getAllProduct(){
-        return productRepository.findAll();
-    }
-
-    @GetMapping("/get-all-bicycle")
-    public List<Product> getAllBicycle(){
-        return productRepository.findAllBicycle();
-    }
-
-    @GetMapping("/get-all-component")
-    public List<Product> getAllComponent(){
-        return productRepository.findAllComponent();
-    }
-
-    @GetMapping("/product/{productId}")
-    public Optional<Product> getProductById(@PathVariable("productId") Long id){
-        return productRepository.findById(id);
-    }
 
     @PostMapping("/uploadFile")
     public UploadFileResponse uploadFile(@RequestParam("image") MultipartFile file) {
@@ -66,11 +39,6 @@ public class FileController {
 
         return new UploadFileResponse(fileName, fileDownloadUri,
                 file.getContentType(), file.getSize());
-    }
-
-    @PostMapping("/saveProduct")
-    public void saveProduct(@RequestBody Map<String, String>  product){
-        productService.saveProduct(product);
     }
 
     @PostMapping("/uploadMultipleFiles")
@@ -105,20 +73,4 @@ public class FileController {
                 .body(resource);
     }
 
-    @DeleteMapping("/deleteProduct/{id}")
-    public void deleteProduct(@PathVariable Long id) throws IOException {
-        Optional<Product> opProd = productRepository.findById(id);
-        Product product = opProd.get();
-        List<String> deletePictures = product.getImgUris();
-        productRepository.deleteById(id);
-        for (String s : deletePictures) {
-            Path pictureToDelete = Paths.get("/home/levente/Desktop/pet/szabiCycle/szaby-cycle-backend/photos/" + s);
-            Files.delete(pictureToDelete);
-        }
-    }
-
-    @PostMapping("/updateProduct")
-    public Product updateProduct(@RequestBody Map<String, String> data){
-        return productService.updateProduct(data);
-    }
 }

@@ -20,7 +20,6 @@ public class Component {
     @Id
     @GeneratedValue
     private Long id;
-
     @NotNull
     private String name;
     @NotNull
@@ -33,6 +32,6 @@ public class Component {
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> imgUris = new ArrayList<>();
-
+    @Enumerated(EnumType.STRING)
     private TypeOfComponent typeOfComponent;
 }

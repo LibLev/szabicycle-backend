@@ -61,6 +61,6 @@ public class Bicycle {
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> imgUris = new ArrayList<>();
-
+    @Enumerated(EnumType.STRING)
     private TypeOfBicycle typeOfBicycle;
 }
