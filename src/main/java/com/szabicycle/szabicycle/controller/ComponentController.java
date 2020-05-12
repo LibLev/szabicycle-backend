@@ -16,6 +16,7 @@ import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin
 public class ComponentController {
 
     ComponentService componentService;
@@ -24,6 +25,76 @@ public class ComponentController {
     @GetMapping("/get-all-component")
     public List<Component> getAllComponent(){
         return componentRepository.findAll();
+    }
+
+    @GetMapping("/get-all-bartape-component")
+    public List<Component> getAllBartapeComponent(){
+        return componentRepository.findAllBartape();
+    }
+
+    @GetMapping("/get-all-break-component")
+    public List<Component> getAllBreakComponent(){
+        return componentRepository.findAllBreak();
+    }
+
+    @GetMapping("/get-all-calliper-component")
+    public List<Component> getAllCalliperComponent(){
+        return componentRepository.findAllCalliper();
+    }
+
+    @GetMapping("/get-all-crankset-component")
+    public List<Component> getAllCranksetComponent(){
+        return componentRepository.findAllCrankset();
+    }
+
+    @GetMapping("/get-all-fork-component")
+    public List<Component> getAllForkComponent(){
+        return componentRepository.findAllFork();
+    }
+
+    @GetMapping("/get-all-frame-component")
+    public List<Component> getAllFrameComponent(){
+        return componentRepository.findAllFrame();
+    }
+
+    @GetMapping("/get-all-groupset-component")
+    public List<Component> getAllGroupsetComponent(){
+        return componentRepository.findAllGroupset();
+    }
+
+    @GetMapping("/get-all-handlebar-component")
+    public List<Component> getAllHandlebarComponent(){
+        return componentRepository.findAllHandlebar();
+    }
+
+    @GetMapping("/get-all-pedal-component")
+    public List<Component> getAllPedalComponent(){
+        return componentRepository.findAllPedal();
+    }
+
+    @GetMapping("/get-all-saddle-component")
+    public List<Component> getAllSaddleComponent(){
+        return componentRepository.findAllSaddle();
+    }
+
+    @GetMapping("/get-all-seatpost-component")
+    public List<Component> getAllSeatpostComponent(){
+        return componentRepository.findAllSeatpost();
+    }
+
+    @GetMapping("/get-all-shifter-component")
+    public List<Component> getAllShifterComponent(){
+        return componentRepository.findAllShifter();
+    }
+
+    @GetMapping("/get-all-stem-component")
+    public List<Component> getAllStemComponent(){
+        return componentRepository.findAllStem();
+    }
+
+    @GetMapping("/get-all-wheel-component")
+    public List<Component> getAllWheelComponent(){
+        return componentRepository.findAllWheel();
     }
 
     @GetMapping("component/{id}")

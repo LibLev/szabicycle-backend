@@ -4,17 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@DynamicUpdate
+@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-@Entity
-@Builder
 public class Bicycle {
 
     @Id
@@ -54,7 +56,6 @@ public class Bicycle {
     private String barTape;
     @NotNull
     private String pedal;
-
     @NotNull
     private int price;
 

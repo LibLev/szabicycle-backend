@@ -1,10 +1,10 @@
 package com.szabicycle.szabicycle.controller;
 
 import com.szabicycle.szabicycle.model.Bicycle;
-import com.szabicycle.szabicycle.model.Product;
 import com.szabicycle.szabicycle.repository.BicycleRepository;
 import com.szabicycle.szabicycle.service.BicycleService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -17,6 +17,8 @@ import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin
+@Slf4j
 public class BicycleController {
 
     private BicycleRepository bicycleRepository;
@@ -27,6 +29,41 @@ public class BicycleController {
         return bicycleRepository.findAll();
     }
 
+    @GetMapping("/get-all-road-bicycle")
+    public List<Bicycle> getAllRoadBike(){
+        return bicycleRepository.findAllRoadBicycle();
+    }
+
+    @GetMapping("/get-all-gravel-bicycle")
+    public List<Bicycle> getAllGravelBike(){
+        return bicycleRepository.findAllGravelBicycle();
+    }
+
+    @GetMapping("/get-all-cyclecross-bicycle")
+    public List<Bicycle> getAllCyclecrossBike(){
+        return bicycleRepository.findAllCyclecrossBicycle();
+    }
+
+    @GetMapping("/get-all-mtb-bicycle")
+    public List<Bicycle> getAllMTBBike(){
+        return bicycleRepository.findAllMTBBicycle();
+    }
+
+    @GetMapping("/get-all-track-bicycle")
+    public List<Bicycle> getAllTrackBike(){
+        return bicycleRepository.findAllTrackBicycle();
+    }
+
+    @GetMapping("/get-all-city-bicycle")
+    public List<Bicycle> getAllCityBike(){
+        return bicycleRepository.findAllCityBicycle();
+    }
+
+    @GetMapping("/get-all-trekking-bicycle")
+    public List<Bicycle> getAllTrekkingBike(){
+        return bicycleRepository.findAllTrekkingBicycle();
+    }
+
     @GetMapping("bicycle/{id}")
     public Optional<Bicycle> getBikeById(@PathVariable("id") Long id) {
         return bicycleRepository.findById(id);
@@ -35,6 +72,7 @@ public class BicycleController {
 
     @PostMapping("/saveBicycle")
     public void saveProduct(@RequestBody Map<String, String> product) {
+        log.info(product.toString());
         bicycleService.saveBicycle(product);
     }
 
