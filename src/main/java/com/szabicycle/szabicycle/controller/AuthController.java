@@ -32,6 +32,8 @@ public class AuthController {
 
     private UserRepository userRepository;
 
+
+
     public AuthController(UserRepository userRepository, AuthenticationManager authenticationManager, JwtTokenServices jwtTokenServices) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenServices = jwtTokenServices;
@@ -40,7 +42,6 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity signin(@RequestBody UserCredentials data) {
-        System.out.println("DATAAAAAAAAAAAA" + data.toString());
         Optional<AppUser> user = userRepository.findByUsername(data.getUsername());
         try {
             String username = data.getUsername();
@@ -61,4 +62,5 @@ public class AuthController {
             throw new BadCredentialsException("Invalid username/password supplied");
         }
     }
+
 }
