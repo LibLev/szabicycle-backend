@@ -231,8 +231,8 @@ public class BicycleService {
         String path = String.format("%s/%s", BucketName.PROFILE_IMAGE.getBucketName(), bicycle.getId());
         String fileName = String.format("%s-%s", file.getOriginalFilename(),UUID.randomUUID());
         try {
-            fileStore.save(path,fileName, Optional.of(metadata),file.getInputStream());
             bicycle.setImgUri(fileName);
+            fileStore.save(path,fileName, Optional.of(metadata),file.getInputStream());
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
