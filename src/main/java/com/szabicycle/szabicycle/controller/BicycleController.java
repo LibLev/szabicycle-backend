@@ -5,7 +5,9 @@ import com.szabicycle.szabicycle.repository.BicycleRepository;
 import com.szabicycle.szabicycle.service.BicycleService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -69,12 +71,26 @@ public class BicycleController {
         return bicycleRepository.findById(id);
     }
 
-
     @PostMapping("/saveBicycle")
     public void saveProduct(@RequestBody Map<String, String> product) {
         log.info(product.toString());
         bicycleService.saveBicycle(product);
     }
+
+    @PostMapping(
+            path = "image/upload/{id}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public void uploadBicycleImage(@PathVariable("id")Long id, @RequestParam("file")MultipartFile file){
+        bicycleService.uploadBicycleImage(id,file);
+    }
+
+    @GetMapping("image/downloadload/{id}")
+    public byte[] downBicycleImage(@PathVariable("id")Long id){
+        return bicycleService.downBicycleImage(id);
+    }
+
 
     @PostMapping("/updateBicycle")
     public Bicycle updateProduct(@RequestBody Map<String, String> data) {

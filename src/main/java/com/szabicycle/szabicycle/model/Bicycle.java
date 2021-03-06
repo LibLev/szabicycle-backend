@@ -59,9 +59,22 @@ public class Bicycle {
     @NotNull
     private int price;
 
+    public String getImgUri() {
+        return imgUri;
+    }
+
+    public void setImgUri(String imgUri) {
+        this.imgUri = imgUri;
+    }
+
+    private String imgUri;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> imgUris = new ArrayList<>();
+
     @Enumerated(EnumType.STRING)
     private TypeOfBicycle typeOfBicycle;
+
+
 }
