@@ -49,8 +49,8 @@ public class BicycleService {
         return type;
     }
 
-    public void saveBicycle(Map<String, String> data){
-        List<String> items = Arrays.asList(data.get("imgUris").split(","));
+    public Bicycle saveBicycle(Map<String, String> data){
+        //List<String> items = Arrays.asList(data.get("imgUris").split(","));
         TypeOfBicycle type = setBicycleType(data.get("typeOfBicycle"));
         Bicycle newBike = Bicycle.builder()
                 .typeOfBicycle(type)
@@ -70,10 +70,10 @@ public class BicycleService {
                 .pedal(data.get("pedal"))
                 .wheels(data.get("wheels"))
                 .details(data.get("details"))
-                .imgUris(items)
+                //.imgUris(items)
                 .price(Integer.parseInt(data.get("price")))
                 .build();
-        bicycleRepository.save(newBike);
+        return bicycleRepository.save(newBike);
     }
 
     public Bicycle updateBicycle(Map<String, String> data){
@@ -231,19 +231,32 @@ public class BicycleService {
         String path = String.format("%s/%s", BucketName.PROFILE_IMAGE.getBucketName(), bicycle.getId());
         String fileName = String.format("%s-%s", file.getOriginalFilename(),UUID.randomUUID());
         try {
-            bicycle.setImgUri(fileName);
+            List<String> images = bicycle.getImgUris();
+            images.add(fileName);
+            bicycle.setImgUris(images);
+            bicycleRepository.save(bicycle);
             fileStore.save(path,fileName, Optional.of(metadata),file.getInputStream());
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
     }
 
-    public byte[] downBicycleImage(Long id) {
+    public byte[] downloadBicycleImage(Long id, int index) {
         Bicycle bicycle = getBicycleOrThrow(id);
         String path = String.format("%s/%s",
                 BucketName.PROFILE_IMAGE.getBucketName(),
                 bicycle.getId());
-        String key = bicycle.getImgUri();
+        String key = bicycle.getImgUris().get(index);
         return fileStore.download(path, key);
     }
+
+/*    public byte[][] downloadAllImage(Long id){
+        Bicycle bicycle = getBicycleOrThrow(id);
+        int ln = bicycle.getImgUris().size();
+        byte[][] images = new byte[ln][];
+        for (int i = 0; i < ln; i++) {
+            images[i] = downloadBicycleImage(id,i);
+        }
+        return images;
+    }*/
 }

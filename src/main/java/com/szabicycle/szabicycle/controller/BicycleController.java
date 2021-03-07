@@ -76,9 +76,9 @@ public class BicycleController {
     }
 
     @PostMapping("/saveBicycle")
-    public void saveProduct(@RequestBody Map<String, String> product) {
+    public Bicycle saveProduct(@RequestBody Map<String, String> product) {
         log.info(product.toString());
-        bicycleService.saveBicycle(product);
+        return bicycleService.saveBicycle(product);
     }
 
     @PostMapping(
@@ -97,16 +97,16 @@ public class BicycleController {
         return new UploadFileResponse(file.getName(),fileDownloadUri,file.getContentType(), file.getSize());
     }
 
-    @PostMapping("/upload-multiple-picture/{id}")
+    @PostMapping("upload-multiple-picture/{id}")
     public List<UploadFileResponse> uploadMultiplePicture(@PathVariable("id") Long id, @RequestParam("files") MultipartFile[] files){
         return Arrays.stream(files)
                 .map(file -> uploadBicycleImage(id, file))
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("image/downloadload/{id}")
-    public byte[] downBicycleImage(@PathVariable("id")Long id){
-        return bicycleService.downBicycleImage(id);
+    @GetMapping("image/download/{id}/{index}")
+    public byte[] downBicycleImage(@PathVariable("id")Long id,@PathVariable("index")int index){
+        return bicycleService.downloadBicycleImage(id,index);
     }
 
 
