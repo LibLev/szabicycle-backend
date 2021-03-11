@@ -11,9 +11,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AmazonConfig {
 
-    private static final String ACCESS_KEY = "AKIAJ33NDDRFSLKBIX4Q";
-    private static final String SECRET_KEY = "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";
-    private static final String REGION = "eu-north-1";
+    private static final String ACCESS_KEY = System.getenv("AMAZON_ACCESS_KEY");
+    private static final String SECRET_KEY = System.getenv("AMAZON_SECRET_KEY");
+    private static final String REGION = System.getenv("AMAZON_REGION");
 
     @Bean
     public AmazonS3 s3(){
