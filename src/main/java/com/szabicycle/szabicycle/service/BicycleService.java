@@ -50,7 +50,6 @@ public class BicycleService {
     }
 
     public Bicycle saveBicycle(Map<String, String> data){
-        //List<String> items = Arrays.asList(data.get("imgUris").split(","));
         TypeOfBicycle type = setBicycleType(data.get("typeOfBicycle"));
         Bicycle newBike = Bicycle.builder()
                 .typeOfBicycle(type)
@@ -70,7 +69,6 @@ public class BicycleService {
                 .pedal(data.get("pedal"))
                 .wheels(data.get("wheels"))
                 .details(data.get("details"))
-                //.imgUris(items)
                 .price(Integer.parseInt(data.get("price")))
                 .build();
         return bicycleRepository.save(newBike);
@@ -228,7 +226,7 @@ public class BicycleService {
 
         Map<String, String> metadata = extractMetadata(file);
 
-        String path = String.format("%s/%s", BucketName.PROFILE_IMAGE.getBucketName(), bicycle.getId());
+        String path = String.format("%s/%s", BucketName.PROFILE_IMAGE.getBucketName(), "bicycle-" + bicycle.getId());
         String fileName = String.format("%s-%s", file.getOriginalFilename(),UUID.randomUUID());
         try {
             List<String> images = bicycle.getImgUris();
@@ -245,18 +243,8 @@ public class BicycleService {
         Bicycle bicycle = getBicycleOrThrow(id);
         String path = String.format("%s/%s",
                 BucketName.PROFILE_IMAGE.getBucketName(),
-                bicycle.getId());
+                "bicycle-"+bicycle.getId());
         String key = bicycle.getImgUris().get(index);
         return fileStore.download(path, key);
     }
-
-/*    public byte[][] downloadAllImage(Long id){
-        Bicycle bicycle = getBicycleOrThrow(id);
-        int ln = bicycle.getImgUris().size();
-        byte[][] images = new byte[ln][];
-        for (int i = 0; i < ln; i++) {
-            images[i] = downloadBicycleImage(id,i);
-        }
-        return images;
-    }*/
 }

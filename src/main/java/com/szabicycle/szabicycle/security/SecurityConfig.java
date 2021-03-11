@@ -74,7 +74,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/get-all-wheel-component").permitAll() // allowed by anyone
                 .antMatchers(HttpMethod.GET,"/product/{productId}").permitAll() // allowed by anyone
                 .antMatchers(HttpMethod.GET,"/downloadFile/**").permitAll() // allowed by anyone
-                .antMatchers(HttpMethod.GET,"/image/download/**").permitAll() // allowed by anyone
+                .antMatchers(HttpMethod.GET,"/bicycle/image/download/**").permitAll() // allowed by anyone
+                .antMatchers(HttpMethod.GET,"/component/image/download/**").permitAll() // allowed by anyone
                 .antMatchers(HttpMethod.POST,"/send-mail").permitAll() // allowed by anyone
                 .antMatchers(HttpMethod.GET,"/bicycle/*").permitAll() // allowed by anyone
                 .antMatchers(HttpMethod.GET,"/component/*").permitAll() // allowed by anyone
@@ -83,7 +84,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/saveComponent").hasRole("ADMIN") // allowed if signed in with ADMIN role
                 .antMatchers(HttpMethod.POST, "/uploadFile").hasRole("ADMIN") // allowed if signed in with ADMIN role
                 .antMatchers(HttpMethod.POST, "/uploadMultipleFiles").hasRole("ADMIN") // allowed if signed in with ADMIN role
-                .antMatchers(HttpMethod.POST, "/upload-multiple-picture/**").hasRole("ADMIN") // allowed if signed in with ADMIN role
+                .antMatchers(HttpMethod.POST, "/bicycle/upload-multiple-picture/**").hasRole("ADMIN") // allowed if signed in with ADMIN role
+                .antMatchers(HttpMethod.POST, "/component/upload-multiple-picture/**").hasRole("ADMIN") // allowed if signed in with ADMIN role
                 .antMatchers(HttpMethod.DELETE, "/deleteProduct/**").hasRole("ADMIN") // allowed if signed in with ADMIN role
                 .antMatchers(HttpMethod.DELETE, "/deleteBicycle/**").hasRole("ADMIN") // allowed if signed in with ADMIN role
                 .antMatchers(HttpMethod.DELETE, "/deleteComponent/**").hasRole("ADMIN") // allowed if signed in with ADMIN role

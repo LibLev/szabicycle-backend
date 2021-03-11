@@ -82,7 +82,7 @@ public class BicycleController {
     }
 
     @PostMapping(
-            path = "image/upload/{id}",
+            path = "bicycle/image/upload/{id}",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
@@ -97,14 +97,14 @@ public class BicycleController {
         return new UploadFileResponse(file.getName(),fileDownloadUri,file.getContentType(), file.getSize());
     }
 
-    @PostMapping("upload-multiple-picture/{id}")
+    @PostMapping("bicycle/upload-multiple-picture/{id}")
     public List<UploadFileResponse> uploadMultiplePicture(@PathVariable("id") Long id, @RequestParam("files") MultipartFile[] files){
         return Arrays.stream(files)
                 .map(file -> uploadBicycleImage(id, file))
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("image/download/{id}/{index}")
+    @GetMapping("bicycle/image/download/{id}/{index}")
     public byte[] downBicycleImage(@PathVariable("id")Long id,@PathVariable("index")int index){
         return bicycleService.downloadBicycleImage(id,index);
     }
