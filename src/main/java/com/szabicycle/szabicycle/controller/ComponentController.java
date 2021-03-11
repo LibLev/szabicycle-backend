@@ -1,18 +1,24 @@
 package com.szabicycle.szabicycle.controller;
 
 import com.szabicycle.szabicycle.model.Component;
+import com.szabicycle.szabicycle.payload.UploadFileResponse;
 import com.szabicycle.szabicycle.repository.ComponentRepository;
 import com.szabicycle.szabicycle.service.ComponentService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
@@ -103,8 +109,36 @@ public class ComponentController {
     }
 
     @PostMapping("/saveComponent")
-    public void saveProduct(@RequestBody Map<String, String> product){
-        componentService.saveComponent(product);
+    public Component saveProduct(@RequestBody Map<String, String> product){
+        return componentService.saveComponent(product);
+    }
+
+    @PostMapping(
+            path = "component/image/upload/{id}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public UploadFileResponse uploadComponentImage(@PathVariable("id")Long id, @RequestParam("file") MultipartFile file){
+        componentService.uploadComponentImage(id,file);
+
+        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/downloadFile/")
+                .path(file.getName())
+                .toUriString();
+
+        return new UploadFileResponse(file.getName(),fileDownloadUri,file.getContentType(), file.getSize());
+    }
+
+    @PostMapping("component/upload-multiple-picture/{id}")
+    public List<UploadFileResponse> uploadMultiplePicture(@PathVariable("id") Long id, @RequestParam("files") MultipartFile[] files){
+        return Arrays.stream(files)
+                .map(file -> uploadComponentImage(id, file))
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("component/image/download/{id}/{index}")
+    public byte[] downloadComponentImage(@PathVariable("id")Long id,@PathVariable("index")int index){
+        return componentService.downloadBicycleImage(id,index);
     }
 
     @PostMapping("/updateComponent")

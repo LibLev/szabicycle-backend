@@ -1,21 +1,27 @@
 package com.szabicycle.szabicycle.service;
 
+import com.szabicycle.szabicycle.bucket.BucketName;
 import com.szabicycle.szabicycle.model.Bicycle;
 import com.szabicycle.szabicycle.model.TypeOfBicycle;
 import com.szabicycle.szabicycle.repository.BicycleRepository;
+import lombok.AllArgsConstructor;
+import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.io.IOException;
+import java.util.*;
+
+import static org.apache.http.entity.ContentType.*;
 
 @Service
+@AllArgsConstructor
 public class BicycleService {
 
-    @Autowired
     private BicycleRepository bicycleRepository;
+
+    private final FileStore fileStore;
 
     public TypeOfBicycle setBicycleType(String data){
         TypeOfBicycle type = null;
@@ -43,8 +49,7 @@ public class BicycleService {
         return type;
     }
 
-    public void saveBicycle(Map<String, String> data){
-        List<String> items = Arrays.asList(data.get("imgUris").split(","));
+    public Bicycle saveBicycle(Map<String, String> data){
         TypeOfBicycle type = setBicycleType(data.get("typeOfBicycle"));
         Bicycle newBike = Bicycle.builder()
                 .typeOfBicycle(type)
@@ -64,10 +69,9 @@ public class BicycleService {
                 .pedal(data.get("pedal"))
                 .wheels(data.get("wheels"))
                 .details(data.get("details"))
-                .imgUris(items)
                 .price(Integer.parseInt(data.get("price")))
                 .build();
-        bicycleRepository.save(newBike);
+        return bicycleRepository.save(newBike);
     }
 
     public Bicycle updateBicycle(Map<String, String> data){
@@ -186,5 +190,61 @@ public class BicycleService {
                 .build();
         bicycleRepository.save(actBike);
         return actBike;
+    }
+
+    private Map<String, String> extractMetadata(MultipartFile file) {
+        Map<String, String> metadata = new HashMap<>();
+        metadata.put("Content-Type", file.getContentType());
+        metadata.put("Content-Length", String.valueOf(file.getSize()));
+        return metadata;
+    }
+
+    private Bicycle getBicycleOrThrow(Long id) {
+        return bicycleRepository.findAll()
+                .stream()
+                .filter(b -> b.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(String.format("Bicycle %s not found", id)));
+    }
+
+    private void isImage(MultipartFile file) {
+        if (!Arrays.asList(IMAGE_JPEG.getMimeType(), IMAGE_PNG.getMimeType(), IMAGE_GIF.getMimeType()).contains(file.getContentType())){
+            throw new IllegalStateException("File must be an image [" + file.getContentType() + "]");
+        }
+    }
+
+    private void isFileEmpty(MultipartFile file) {
+        if (file.isEmpty()){
+            throw new IllegalStateException("Cannot upload an empty file [" + file.getSize() + "]");
+        }
+    }
+
+    public void uploadBicycleImage(Long id, MultipartFile file) {
+        isFileEmpty(file);
+        isImage(file);
+        Bicycle bicycle = getBicycleOrThrow(id);
+
+        Map<String, String> metadata = extractMetadata(file);
+
+        String path = String.format("%s/%s", BucketName.PROFILE_IMAGE.getBucketName(), "bicycle-" + bicycle.getId());
+        String fileName = String.format("%s-%s", file.getOriginalFilename(),UUID.randomUUID());
+        try {
+            List<String> images = bicycle.getImgUris();
+            images.add(fileName);
+            bicycle.setImgUris(images);
+            bicycleRepository.save(bicycle);
+            fileStore.save(path,fileName, Optional.of(metadata),file.getInputStream());
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    public byte[] downloadBicycleImage(Long id, int index) {
+        Bicycle bicycle = getBicycleOrThrow(id);
+        String path = String.format("%s/%s",
+                BucketName.PROFILE_IMAGE.getBucketName(),
+                "bicycle-"+bicycle.getId());
+        String key = bicycle.getImgUris().get(index);
+        return fileStore.download(path, key);
     }
 }

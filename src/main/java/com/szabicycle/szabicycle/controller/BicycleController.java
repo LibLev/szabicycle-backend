@@ -1,19 +1,25 @@
 package com.szabicycle.szabicycle.controller;
 
 import com.szabicycle.szabicycle.model.Bicycle;
+import com.szabicycle.szabicycle.payload.UploadFileResponse;
 import com.szabicycle.szabicycle.repository.BicycleRepository;
 import com.szabicycle.szabicycle.service.BicycleService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
@@ -69,12 +75,40 @@ public class BicycleController {
         return bicycleRepository.findById(id);
     }
 
-
     @PostMapping("/saveBicycle")
-    public void saveProduct(@RequestBody Map<String, String> product) {
+    public Bicycle saveProduct(@RequestBody Map<String, String> product) {
         log.info(product.toString());
-        bicycleService.saveBicycle(product);
+        return bicycleService.saveBicycle(product);
     }
+
+    @PostMapping(
+            path = "bicycle/image/upload/{id}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public UploadFileResponse uploadBicycleImage(@PathVariable("id")Long id, @RequestParam("file")MultipartFile file){
+        bicycleService.uploadBicycleImage(id,file);
+
+        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/downloadFile/")
+                .path(file.getName())
+                .toUriString();
+
+        return new UploadFileResponse(file.getName(),fileDownloadUri,file.getContentType(), file.getSize());
+    }
+
+    @PostMapping("bicycle/upload-multiple-picture/{id}")
+    public List<UploadFileResponse> uploadMultiplePicture(@PathVariable("id") Long id, @RequestParam("files") MultipartFile[] files){
+        return Arrays.stream(files)
+                .map(file -> uploadBicycleImage(id, file))
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("bicycle/image/download/{id}/{index}")
+    public byte[] downBicycleImage(@PathVariable("id")Long id,@PathVariable("index")int index){
+        return bicycleService.downloadBicycleImage(id,index);
+    }
+
 
     @PostMapping("/updateBicycle")
     public Bicycle updateProduct(@RequestBody Map<String, String> data) {
