@@ -2,6 +2,7 @@ package com.szabicycle.szabicycle.service;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
@@ -46,6 +47,15 @@ public class FileStore {
             S3Object object = s3.getObject(path, key);
             return IOUtils.toByteArray(object.getObjectContent());
         }catch (AmazonServiceException | IOException e){
+            throw new IllegalStateException("Failed to download file from s3", e);
+        }
+    }
+
+    public void delete(String path, String key){
+        try {
+            final DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(path,key);
+            s3.deleteObject(deleteObjectRequest);
+        }catch (AmazonServiceException e){
             throw new IllegalStateException("Failed to download file from s3", e);
         }
     }

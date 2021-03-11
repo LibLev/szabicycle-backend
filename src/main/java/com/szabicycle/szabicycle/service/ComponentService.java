@@ -172,4 +172,22 @@ public class ComponentService {
         String key = component.getImgUris().get(index);
         return fileStore.download(path, key);
     }
+
+    public void deleteImage(Long id, int index){
+        Component component = getComponentOrThrow(id);
+        String path = String.format("%s/%s",
+                BucketName.PROFILE_IMAGE.getBucketName(),
+                "bicycle-"+component.getId());
+        String key = component.getImgUris().get(index);
+        fileStore.delete(path,key);
+    }
+
+    public void deleteComponent(Long id) {
+        Component component = getComponentOrThrow(id);
+        List<String> deletePictures = component.getImgUris();
+        for (int i = 0; i < deletePictures.size(); i++) {
+            deleteImage(id,i);
+        }
+        componentRepository.delete(component);
+    }
 }
