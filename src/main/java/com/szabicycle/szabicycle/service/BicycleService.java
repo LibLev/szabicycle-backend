@@ -247,4 +247,22 @@ public class BicycleService {
         String key = bicycle.getImgUris().get(index);
         return fileStore.download(path, key);
     }
+
+    public void deleteImage(Long id, int index){
+        Bicycle bicycle = getBicycleOrThrow(id);
+        String path = String.format("%s/%s",
+                BucketName.PROFILE_IMAGE.getBucketName(),
+                "bicycle-"+bicycle.getId());
+        String key = bicycle.getImgUris().get(index);
+        fileStore.delete(path,key);
+    }
+
+    public void deleteBicycle(Long id) {
+        Bicycle bicycle = getBicycleOrThrow(id);
+        List<String> deletePictures = bicycle.getImgUris();
+        for (int i = 0; i < deletePictures.size(); i++) {
+            deleteImage(id,i);
+        }
+        bicycleRepository.delete(bicycle);
+    }
 }

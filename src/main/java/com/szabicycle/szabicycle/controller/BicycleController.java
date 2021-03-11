@@ -6,7 +6,9 @@ import com.szabicycle.szabicycle.repository.BicycleRepository;
 import com.szabicycle.szabicycle.service.BicycleService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -116,15 +118,10 @@ public class BicycleController {
     }
 
     @DeleteMapping("/deleteBicycle/{id}")
-    public void deleteProduct(@PathVariable Long id) throws IOException {
-        Optional<Bicycle> opProd = bicycleRepository.findById(id);
-        Bicycle bicycle = opProd.get();
-        List<String> deletePictures = bicycle.getImgUris();
-        bicycleRepository.deleteById(id);
-        for (String s : deletePictures) {
-            Path pictureToDelete = Paths.get("/home/levente/Desktop/pet/szabiCycle/szaby-cycle-backend/photos/" + s);
-            Files.delete(pictureToDelete);
-        }
+    public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
+        bicycleService.deleteBicycle(id);
+        final String response = "Bicycle with" + id + "id has been deleted.";
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }

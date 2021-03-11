@@ -5,15 +5,14 @@ import com.szabicycle.szabicycle.payload.UploadFileResponse;
 import com.szabicycle.szabicycle.repository.ComponentRepository;
 import com.szabicycle.szabicycle.service.ComponentService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -147,15 +146,10 @@ public class ComponentController {
     }
 
     @DeleteMapping("/deleteComponent/{id}")
-    public void deleteProduct(@PathVariable Long id) throws IOException {
-        Optional<Component> opProd = componentRepository.findById(id);
-        Component component = opProd.get();
-        List<String> deletePictures = component.getImgUris();
-        componentRepository.deleteById(id);
-        for (String s : deletePictures) {
-            Path pictureToDelete = Paths.get("/home/levente/Desktop/pet/szabiCycle/szaby-cycle-backend/photos/" + s);
-            Files.delete(pictureToDelete);
-        }
+    public ResponseEntity<String> deleteProduct(@PathVariable Long id) throws IOException {
+        componentService.deleteComponent(id);
+        final String response = "Bicycle with" + id + "id has been deleted.";
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }
