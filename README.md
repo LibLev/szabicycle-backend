@@ -11,9 +11,12 @@
 - Swagger
 - AWS S3
 - Heroku
+
+#Heroku Link:
+https://szabicycle.herokuapp.com/swagger-ui.html#/
   
  ## About the project
-  - I created this website to my frinde who selling used bicycles.
+  - I created this website to one of my frinde who selling used bicycles.
 
 #frontend link:
 https://github.com/LibLev/szabi-cycle-frontend
