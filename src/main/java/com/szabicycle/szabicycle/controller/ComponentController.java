@@ -1,5 +1,6 @@
 package com.szabicycle.szabicycle.controller;
 
+import com.szabicycle.szabicycle.model.Bicycle;
 import com.szabicycle.szabicycle.model.Component;
 import com.szabicycle.szabicycle.payload.UploadFileResponse;
 import com.szabicycle.szabicycle.repository.ComponentRepository;
@@ -138,6 +139,11 @@ public class ComponentController {
     @GetMapping("component/image/download/{id}/{index}")
     public byte[] downloadComponentImage(@PathVariable("id")Long id,@PathVariable("index")int index){
         return componentService.downloadBicycleImage(id,index);
+    }
+
+    @PostMapping("component/set-main-pic")
+    public Component setMainPic(@RequestBody Map<String, String> data){
+        return componentService.setMainPic(Long.parseLong(data.get("id")), data.get("mainImage"));
     }
 
     @PostMapping("/updateComponent")

@@ -59,14 +59,6 @@ public class Bicycle {
     @NotNull
     private int price;
 
-    public String getImgUri() {
-        return imgUri;
-    }
-
-    public void setImgUri(String imgUri) {
-        this.imgUri = imgUri;
-    }
-
     private String imgUri;
 
     @ElementCollection(fetch = FetchType.EAGER)

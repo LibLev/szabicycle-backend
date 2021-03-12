@@ -29,6 +29,8 @@ public class Component {
     @NotNull
     private int price;
 
+    private String imgUri;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> imgUris = new ArrayList<>();

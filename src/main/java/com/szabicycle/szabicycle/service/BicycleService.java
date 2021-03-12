@@ -70,6 +70,7 @@ public class BicycleService {
                 .wheels(data.get("wheels"))
                 .details(data.get("details"))
                 .price(Integer.parseInt(data.get("price")))
+                .imgUri("")
                 .build();
         return bicycleRepository.save(newBike);
     }
@@ -78,10 +79,7 @@ public class BicycleService {
         String name, brand, details, frame, fork, groupSet, shifters, breaks, callipers,
                 wheels, saddle, seatPost, stem, handlebar, barTape, pedal;
         int price;
-        Optional<Bicycle> optBike = bicycleRepository.findById(Long.parseLong(data.get("id")));
-        Bicycle actBike = optBike.get();
-        List<String> items = Arrays.asList(data.get("imgUris").split(","));
-        TypeOfBicycle type = setBicycleType(data.get("typeOfBicycle"));
+        Bicycle actBike = getBicycleOrThrow(Long.valueOf(data.get("id")));
         if (data.get("name").equals("")){
             name = actBike.getName();
         }else {
@@ -167,27 +165,23 @@ public class BicycleService {
         }else {
             price =Integer.parseInt(data.get("price"));
         }
-        actBike = Bicycle.builder()
-                .typeOfBicycle(type)
-                .name(name)
-                .brand(brand)
-                .frame(frame)
-                .fork(fork)
-                .groupSet(groupSet)
-                .shifters(shifters)
-                .callipers(callipers)
-                .breaks(breaks)
-                .seatPost(seatPost)
-                .saddle(saddle)
-                .stem(stem)
-                .handlebar(handlebar)
-                .barTape(barTape)
-                .pedal(pedal)
-                .wheels(wheels)
-                .details(details)
-                .imgUris(items)
-                .price(price)
-                .build();
+        actBike.setName(name);
+        actBike.setBrand(brand);
+        actBike.setFrame(frame);
+        actBike.setFork(fork);
+        actBike.setGroupSet(groupSet);
+        actBike.setShifters(shifters);
+        actBike.setCallipers(callipers);
+        actBike.setBreaks(breaks);
+        actBike.setSeatPost(seatPost);
+        actBike.setSaddle(saddle);
+        actBike.setStem(stem);
+        actBike.setHandlebar(handlebar);
+        actBike.setBarTape(barTape);
+        actBike.setPedal(pedal);
+        actBike.setWheels(wheels);
+        actBike.setDetails(details);
+        actBike.setPrice(price);
         bicycleRepository.save(actBike);
         return actBike;
     }
@@ -227,7 +221,7 @@ public class BicycleService {
         Map<String, String> metadata = extractMetadata(file);
 
         String path = String.format("%s/%s", BucketName.PROFILE_IMAGE.getBucketName(), "bicycle-" + bicycle.getId());
-        String fileName = String.format("%s-%s", file.getOriginalFilename(),UUID.randomUUID());
+        String fileName = String.format("%s", file.getOriginalFilename());
         try {
             List<String> images = bicycle.getImgUris();
             images.add(fileName);
@@ -264,5 +258,11 @@ public class BicycleService {
             deleteImage(id,i);
         }
         bicycleRepository.delete(bicycle);
+    }
+
+    public Bicycle setMainPic(Long id, String mainImg) {
+        Bicycle bicycle = getBicycleOrThrow(id);
+        bicycle.setImgUri(mainImg);
+        return bicycleRepository.save(bicycle);
     }
 }

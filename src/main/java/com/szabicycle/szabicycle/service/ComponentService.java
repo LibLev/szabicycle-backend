@@ -81,9 +81,7 @@ public class ComponentService {
         String brand;
         String details;
         int price;
-        Optional<Component> optionalComp = componentRepository.findById(Long.parseLong(data.get("id")));
-        Component actComp = optionalComp.get();
-        List<String> items = Arrays.asList(data.get("imgUris").split(","));
+        Component actComp = getComponentOrThrow(Long.valueOf(data.get("id")));
         if (data.get("name").equals("")){
             name = actComp.getName();
         }else {
@@ -104,15 +102,10 @@ public class ComponentService {
         }else {
             price = Integer.parseInt(data.get("price"));
         }
-        actComp = Component.builder()
-                .id(actComp.getId())
-                .name(name)
-                .brand(brand)
-                .details(details)
-                .price(price)
-                .imgUris(items)
-                .typeOfComponent(setTypeOfComponent(data.get("typeOfComponent")))
-                .build();
+        actComp.setName(name);
+        actComp.setBrand(brand);
+        actComp.setDetails(details);
+        actComp.setPrice(price);
         componentRepository.save(actComp);
         return actComp;
     }
@@ -152,7 +145,7 @@ public class ComponentService {
         Map<String, String> metadata = extractMetadata(file);
 
         String path = String.format("%s/%s", BucketName.PROFILE_IMAGE.getBucketName(), "component-" + component.getId());
-        String fileName = String.format("%s-%s", file.getOriginalFilename(),UUID.randomUUID());
+        String fileName = String.format("%s", file.getOriginalFilename());
         try {
             List<String> images = component.getImgUris();
             images.add(fileName);
@@ -177,7 +170,7 @@ public class ComponentService {
         Component component = getComponentOrThrow(id);
         String path = String.format("%s/%s",
                 BucketName.PROFILE_IMAGE.getBucketName(),
-                "bicycle-"+component.getId());
+                "component-"+component.getId());
         String key = component.getImgUris().get(index);
         fileStore.delete(path,key);
     }
@@ -189,5 +182,11 @@ public class ComponentService {
             deleteImage(id,i);
         }
         componentRepository.delete(component);
+    }
+
+    public Component setMainPic(Long id, String mainImg) {
+        Component component = getComponentOrThrow(id);
+        component.setImgUri(mainImg);
+        return componentRepository.save(component);
     }
 }

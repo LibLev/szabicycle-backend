@@ -86,6 +86,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/uploadMultipleFiles").hasRole("ADMIN") // allowed if signed in with ADMIN role
                 .antMatchers(HttpMethod.POST, "/bicycle/upload-multiple-picture/**").hasRole("ADMIN") // allowed if signed in with ADMIN role
                 .antMatchers(HttpMethod.POST, "/component/upload-multiple-picture/**").hasRole("ADMIN") // allowed if signed in with ADMIN role
+                .antMatchers(HttpMethod.POST, "/bicycle/set-main-pic/**").hasRole("ADMIN") // allowed if signed in with ADMIN role
+                .antMatchers(HttpMethod.POST, "/component/set-main-pic/**").hasRole("ADMIN") // allowed if signed in with ADMIN role
                 .antMatchers(HttpMethod.DELETE, "/deleteProduct/**").hasRole("ADMIN") // allowed if signed in with ADMIN role
                 .antMatchers(HttpMethod.DELETE, "/deleteBicycle/**").hasRole("ADMIN") // allowed if signed in with ADMIN role
                 .antMatchers(HttpMethod.DELETE, "/deleteComponent/**").hasRole("ADMIN") // allowed if signed in with ADMIN role
