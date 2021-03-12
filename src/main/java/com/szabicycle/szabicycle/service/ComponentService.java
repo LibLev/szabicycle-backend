@@ -81,9 +81,7 @@ public class ComponentService {
         String brand;
         String details;
         int price;
-        Optional<Component> optionalComp = componentRepository.findById(Long.parseLong(data.get("id")));
-        Component actComp = optionalComp.get();
-        List<String> items = Arrays.asList(data.get("imgUris").split(","));
+        Component actComp = getComponentOrThrow(Long.valueOf(data.get("id")));
         if (data.get("name").equals("")){
             name = actComp.getName();
         }else {
@@ -104,15 +102,10 @@ public class ComponentService {
         }else {
             price = Integer.parseInt(data.get("price"));
         }
-        actComp = Component.builder()
-                .id(actComp.getId())
-                .name(name)
-                .brand(brand)
-                .details(details)
-                .price(price)
-                .imgUris(items)
-                .typeOfComponent(setTypeOfComponent(data.get("typeOfComponent")))
-                .build();
+        actComp.setName(name);
+        actComp.setBrand(brand);
+        actComp.setDetails(details);
+        actComp.setPrice(price);
         componentRepository.save(actComp);
         return actComp;
     }
