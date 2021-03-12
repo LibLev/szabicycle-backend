@@ -70,6 +70,7 @@ public class BicycleService {
                 .wheels(data.get("wheels"))
                 .details(data.get("details"))
                 .price(Integer.parseInt(data.get("price")))
+                .imgUri("")
                 .build();
         return bicycleRepository.save(newBike);
     }
@@ -227,7 +228,7 @@ public class BicycleService {
         Map<String, String> metadata = extractMetadata(file);
 
         String path = String.format("%s/%s", BucketName.PROFILE_IMAGE.getBucketName(), "bicycle-" + bicycle.getId());
-        String fileName = String.format("%s-%s", file.getOriginalFilename(),UUID.randomUUID());
+        String fileName = String.format("%s", file.getOriginalFilename());
         try {
             List<String> images = bicycle.getImgUris();
             images.add(fileName);
@@ -264,5 +265,11 @@ public class BicycleService {
             deleteImage(id,i);
         }
         bicycleRepository.delete(bicycle);
+    }
+
+    public Bicycle setMainPic(Long id, String mainImg) {
+        Bicycle bicycle = getBicycleOrThrow(id);
+        bicycle.setImgUri(mainImg);
+        return bicycleRepository.save(bicycle);
     }
 }

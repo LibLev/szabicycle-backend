@@ -106,11 +106,16 @@ public class BicycleController {
                 .collect(Collectors.toList());
     }
 
+    @PostMapping("bicycle/set-main-pic")
+    public Bicycle setMainPic(@RequestBody Map<String, String> data){
+        log.info(data.toString());
+        return bicycleService.setMainPic(Long.parseLong(data.get("id")), data.get("mainImage"));
+    }
+
     @GetMapping("bicycle/image/download/{id}/{index}")
     public byte[] downBicycleImage(@PathVariable("id")Long id,@PathVariable("index")int index){
         return bicycleService.downloadBicycleImage(id,index);
     }
-
 
     @PostMapping("/updateBicycle")
     public Bicycle updateProduct(@RequestBody Map<String, String> data) {

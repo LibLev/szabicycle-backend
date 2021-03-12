@@ -152,7 +152,7 @@ public class ComponentService {
         Map<String, String> metadata = extractMetadata(file);
 
         String path = String.format("%s/%s", BucketName.PROFILE_IMAGE.getBucketName(), "component-" + component.getId());
-        String fileName = String.format("%s-%s", file.getOriginalFilename(),UUID.randomUUID());
+        String fileName = String.format("%s", file.getOriginalFilename());
         try {
             List<String> images = component.getImgUris();
             images.add(fileName);
@@ -177,7 +177,7 @@ public class ComponentService {
         Component component = getComponentOrThrow(id);
         String path = String.format("%s/%s",
                 BucketName.PROFILE_IMAGE.getBucketName(),
-                "bicycle-"+component.getId());
+                "component-"+component.getId());
         String key = component.getImgUris().get(index);
         fileStore.delete(path,key);
     }
@@ -189,5 +189,11 @@ public class ComponentService {
             deleteImage(id,i);
         }
         componentRepository.delete(component);
+    }
+
+    public Component setMainPic(Long id, String mainImg) {
+        Component component = getComponentOrThrow(id);
+        component.setImgUri(mainImg);
+        return componentRepository.save(component);
     }
 }
